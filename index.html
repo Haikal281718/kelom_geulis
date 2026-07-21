@@ -253,6 +253,22 @@
   .star-pick{font-size:30px; cursor:pointer; color:#DDD0B8; user-select:none;}
   .star-pick.filled{color:var(--gold);}
 
+
+  /* ---------- Size picker ---------- */
+  .size-section{margin-bottom:18px;}
+  .size-label{font-size:12.5px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;display:block;}
+  .size-grid{display:flex;flex-wrap:wrap;gap:8px;}
+  .size-btn{
+    width:44px;height:44px;border-radius:10px;border:1.5px solid var(--line);
+    background:var(--white);font-size:14px;font-weight:700;color:var(--ink-soft);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .12s;
+    position:relative;
+  }
+  .size-btn:hover:not(.empty):not(.selected){border-color:var(--wood-mid);color:var(--wood-dark);background:var(--cream-soft);}
+  .size-btn.selected{border-color:var(--lacquer);background:var(--lacquer);color:#fff;border-width:2px;}
+  .size-btn.empty{border-style:dashed;color:#ccc;cursor:not-allowed;background:#f9f9f9;}
+  .size-btn.empty::after{content:'';position:absolute;width:110%;height:1.5px;background:#ddd;top:50%;left:-5%;transform:rotate(-35deg);}
+  .size-badge{display:inline-block;background:var(--cream);color:var(--ink-soft);font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:8px;border:1px solid var(--line);}
   /* ---------- Photo upload zone ---------- */
   .upload-zone{
     border:2px dashed var(--line); border-radius:12px; background:var(--cream-soft);
@@ -360,6 +376,7 @@ function kelomSVGInner(){
    DATA / STATE
    ========================================================= */
 var ORDER_STATUSES = ['Menunggu Pembayaran','Dibayar','Diproses','Dikirim','Selesai','Dibatalkan'];
+var SIZES = [35,36,37,38,39,40,41];
 var COURIERS = ['JNE','J&T Express','SiCepat','Pos Indonesia'];
 var SHIPPING_FEE = 15000;
 
@@ -370,14 +387,14 @@ var state = {
     {username:'pembeli', password:'pembeli123', role:'pembeli', name:'Dewi Lestari', address:{nama:'Dewi Lestari', telp:'081234567890', alamat:'Jl. Mawar No. 12, RT 03/RW 05', kota:'Bandung', kodepos:'40123'}}
   ],
   products: [
-    {id:'p1', name:'Kelom Geulis Ukir Bunga Melati', price:185000, stock:18, category:'Ukir', accent:'#9C3B33', desc:'Kelom geulis khas Tasikmalaya dengan ukiran motif bunga melati pada strap, dibuat dari kayu mahoni pilihan dan dilapisi vernis mengkilap. Cocok untuk acara adat maupun pemakaian sehari-hari.'},
-    {id:'p2', name:'Kelom Geulis Lukis Mega Mendung', price:210000, stock:12, category:'Lukis', accent:'#3F5D3A', desc:'Terinspirasi motif batik Mega Mendung, kelom ini dilukis tangan oleh perajin Tasikmalaya menggunakan cat akrilik tahan lama. Tampilan elegan untuk pecinta budaya Sunda.'},
-    {id:'p3', name:'Kelom Geulis Polos Klasik', price:150000, stock:25, category:'Klasik', accent:'#7A4B30', desc:'Desain klasik tanpa ukiran, mengandalkan keindahan serat kayu asli. Ringan, nyaman dipakai, dan cocok dipadukan dengan busana apa saja.'},
-    {id:'p4', name:'Kelom Geulis Ukir Kembang Sepatu', price:195000, stock:14, category:'Ukir', accent:'#C79A3E', desc:'Ukiran kembang sepatu yang detail dan rapi, hasil tatahan tangan perajin berpengalaman. Memberikan kesan mewah namun tetap tradisional.'},
-    {id:'p5', name:'Kelom Geulis Motif Batik Parang', price:225000, stock:10, category:'Lukis', accent:'#5A3A8A', desc:'Motif batik Parang yang melambangkan kekuatan dan kesinambungan, dilukis halus di atas permukaan kayu yang dihaluskan sempurna.'},
-    {id:'p6', name:'Kelom Geulis Lukis Bunga Matahari', price:205000, stock:16, category:'Lukis', accent:'#C79A3E', desc:'Warna-warni ceria motif bunga matahari, favorit anak muda. Dilukis menggunakan cat khusus kayu agar warna tetap awet.'},
-    {id:'p7', name:'Kelom Geulis Ukir Daun Pakis', price:175000, stock:20, category:'Ukir', accent:'#3F5D3A', desc:'Ukiran daun pakis yang lembut dan natural, memberikan kesan sejuk dan dekat dengan alam. Nyaman untuk pemakaian harian.'},
-    {id:'p8', name:'Kelom Geulis Edisi Pengantin', price:350000, stock:6, category:'Edisi Spesial', accent:'#9C3B33', desc:'Edisi mewah dengan ukiran dan lukisan kombinasi, ditambah aksen prada emas. Dirancang khusus untuk momen pernikahan dan acara adat besar.'}
+    {id:'p1', name:'Kelom Geulis Ukir Bunga Melati', price:185000, stock:18, sizes:{35: 2, 36: 3, 37: 4, 38: 4, 39: 3, 40: 1, 41: 1}, category:'Ukir', accent:'#9C3B33', desc:'Kelom geulis khas Tasikmalaya dengan ukiran motif bunga melati pada strap, dibuat dari kayu mahoni pilihan dan dilapisi vernis mengkilap. Cocok untuk acara adat maupun pemakaian sehari-hari.'},
+    {id:'p2', name:'Kelom Geulis Lukis Mega Mendung', price:210000, stock:12, sizes:{35: 1, 36: 2, 37: 3, 38: 3, 39: 2, 40: 1, 41: 0}, category:'Lukis', accent:'#3F5D3A', desc:'Terinspirasi motif batik Mega Mendung, kelom ini dilukis tangan oleh perajin Tasikmalaya menggunakan cat akrilik tahan lama. Tampilan elegan untuk pecinta budaya Sunda.'},
+    {id:'p3', name:'Kelom Geulis Polos Klasik', price:150000, stock:25, sizes:{35: 3, 36: 4, 37: 5, 38: 5, 39: 4, 40: 2, 41: 2}, category:'Klasik', accent:'#7A4B30', desc:'Desain klasik tanpa ukiran, mengandalkan keindahan serat kayu asli. Ringan, nyaman dipakai, dan cocok dipadukan dengan busana apa saja.'},
+    {id:'p4', name:'Kelom Geulis Ukir Kembang Sepatu', price:195000, stock:14, sizes:{35: 2, 36: 2, 37: 3, 38: 3, 39: 2, 40: 1, 41: 1}, category:'Ukir', accent:'#C79A3E', desc:'Ukiran kembang sepatu yang detail dan rapi, hasil tatahan tangan perajin berpengalaman. Memberikan kesan mewah namun tetap tradisional.'},
+    {id:'p5', name:'Kelom Geulis Motif Batik Parang', price:225000, stock:10, sizes:{35: 1, 36: 1, 37: 2, 38: 3, 39: 2, 40: 1, 41: 0}, category:'Lukis', accent:'#5A3A8A', desc:'Motif batik Parang yang melambangkan kekuatan dan kesinambungan, dilukis halus di atas permukaan kayu yang dihaluskan sempurna.'},
+    {id:'p6', name:'Kelom Geulis Lukis Bunga Matahari', price:205000, stock:16, sizes:{35: 2, 36: 2, 37: 3, 38: 4, 39: 3, 40: 1, 41: 1}, category:'Lukis', accent:'#C79A3E', desc:'Warna-warni ceria motif bunga matahari, favorit anak muda. Dilukis menggunakan cat khusus kayu agar warna tetap awet.'},
+    {id:'p7', name:'Kelom Geulis Ukir Daun Pakis', price:175000, stock:20, sizes:{35: 2, 36: 3, 37: 4, 38: 4, 39: 4, 40: 2, 41: 1}, category:'Ukir', accent:'#3F5D3A', desc:'Ukiran daun pakis yang lembut dan natural, memberikan kesan sejuk dan dekat dengan alam. Nyaman untuk pemakaian harian.'},
+    {id:'p8', name:'Kelom Geulis Edisi Pengantin', price:350000, stock:6, sizes:{35: 0, 36: 1, 37: 2, 38: 2, 39: 1, 40: 0, 41: 0}, category:'Edisi Spesial', accent:'#9C3B33', desc:'Edisi mewah dengan ukiran dan lukisan kombinasi, ditambah aksen prada emas. Dirancang khusus untuk momen pernikahan dan acara adat besar.'}
   ],
   reviews: [
     {id:'r1', productId:'p1', username:'rina_a', name:'Rina A.', rating:5, comment:'Ukirannya halus, kayu kuat dan nyaman dipakai. Pengiriman juga cepat!', date:'2026-05-02'},
@@ -440,6 +457,7 @@ var state = {
   searchQuery:'',
   activeCategory:'Semua',
   selectedProductId:null,
+  detailSize:null,
   detailQty:1,
   expandedOrderId:null,
   checkout:{ step:1, address:null, payment:null, bank:'BCA' },
@@ -477,6 +495,30 @@ function getNotifs(username){
 }
 function addNotif(username, message){
   getNotifs(username).unshift({id:genId('N'), message:message, at:nowStamp(), read:false});
+}
+function stockForSize(p, sz){
+  if(!p.sizes) return p.stock;
+  return p.sizes[sz] != null ? p.sizes[sz] : 0;
+}
+function totalStock(p){
+  if(!p.sizes) return p.stock;
+  return Object.values(p.sizes).reduce(function(a,b){return a+b;},0);
+}
+function sizePickerHTML(p, selectedSz, forDetail){
+  var out = '<div class="size-section">';
+  out += '<span class="size-label">Pilih Ukuran';
+  if(selectedSz) out += ' <span class="size-badge">Dipilih: '+selectedSz+'</span>';
+  out += '</span><div class="size-grid">';
+  SIZES.forEach(function(sz){
+    var stk = stockForSize(p, sz);
+    var empty = stk <= 0;
+    var sel   = selectedSz == sz;
+    var cls   = 'size-btn'+(empty?' empty':'')+(sel?' selected':'');
+    var click = !empty && forDetail ? 'onclick="selectDetailSize('+sz+')"' : '';
+    out += '<button class="'+cls+'" '+click+(empty?' disabled title="Stok habis"':'')+'>'+sz+'</button>';
+  });
+  out += '</div></div>';
+  return out;
 }
 function ratingStats(productId){
   var revs = state.reviews.filter(function(r){return r.productId===productId;});
@@ -677,6 +719,9 @@ function productCardHTML(p){
   +     '<div class="pcard-cat">'+p.category+'</div>'
   +     '<div class="pcard-name" onclick="openDetail(\''+p.id+'\')" style="cursor:pointer">'+escapeHTML(p.name)+'</div>'
   +     '<div class="pcard-price">'+formatRupiah(p.price)+'</div>'
+  +     '<div style="font-size:11px;color:var(--ink-soft);margin-bottom:4px;">'
+  +       (p.sizes ? 'UK: '+SIZES.filter(function(sz){return p.sizes[sz]>0;}).join(', ') : '')
+  +     '</div>'
   +     '<div class="pcard-stars">'+(stat.count>0 ? starsHTML(stat.avg,13)+' ('+stat.count+')' : 'Belum ada ulasan')+'</div>'
   +     '<div class="pcard-foot">'
   +       '<button class="btn btn-outline btn-sm" style="flex:1" onclick="openDetail(\''+p.id+'\')">Detail</button>'
@@ -687,15 +732,27 @@ function productCardHTML(p){
 }
 function setCategory(c){ state.activeCategory=c; document.getElementById('product-grid').innerHTML = buildProductGrid(); }
 function onSearchInput(val){ state.searchQuery=val; document.getElementById('product-grid').innerHTML = buildProductGrid(); }
-function quickAdd(id){ addToCart(id,1); flashToast('Ditambahkan ke keranjang.'); }
+function quickAdd(id){ openDetail(id); flashToast('Pilih ukuran terlebih dahulu.'); }
 
 /* ---------- Detail Produk ---------- */
-function openDetail(id){ state.selectedProductId=id; state.detailQty=1; state.buyerView='detail'; render(); }
+function openDetail(id){ state.selectedProductId=id; state.detailQty=1; state.detailSize=null; state.buyerView='detail'; render(); }
+function selectDetailSize(sz){
+  if(state.detailSize===sz){ state.detailSize=null; }
+  else { state.detailSize=sz; }
+  // clamp qty to new size stock
+  var p = findProduct(state.selectedProductId);
+  var maxStk = state.detailSize ? stockForSize(p, state.detailSize) : 1;
+  state.detailQty = Math.max(1, Math.min(state.detailQty, maxStk));
+  render();
+}
 function renderDetailProduk(){
   var p = findProduct(state.selectedProductId);
   if(!p) return '<div class="empty-state">Produk tidak ditemukan.</div>';
   var stat = ratingStats(p.id);
   var revs = state.reviews.filter(function(r){return r.productId===p.id;});
+  var sz = state.detailSize;
+  var availStk = sz ? stockForSize(p, sz) : totalStock(p);
+  var canAdd = !!(sz && availStk > 0);
   return ''
   + '<button class="btn btn-ghost" style="margin-bottom:14px" onclick="goBuyerView(\'katalog\')">← Kembali ke Katalog</button>'
   + '<div class="detail-wrap">'
@@ -706,11 +763,15 @@ function renderDetailProduk(){
   +     '<div style="margin-bottom:10px">'+(stat.count>0 ? starsHTML(stat.avg,16)+' <b>'+stat.avg.toFixed(1)+'</b> · '+stat.count+' ulasan' : 'Belum ada ulasan')+'</div>'
   +     '<div style="font-size:24px;font-weight:700;color:var(--lacquer-dark);margin-bottom:10px;">'+formatRupiah(p.price)+'</div>'
   +     '<p style="color:var(--ink-soft);line-height:1.7;font-size:14.5px;">'+escapeHTML(p.desc)+'</p>'
-  +     '<div style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;">Stok tersedia: <b>'+p.stock+'</b></div>'
-  +     '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">'
-  +       '<div class="qty-stepper"><button onclick="changeDetailQty(-1)">−</button><span>'+state.detailQty+'</span><button onclick="changeDetailQty(1)">+</button></div>'
-  +       '<button class="btn btn-primary" '+(p.stock<=0?'disabled':'')+' onclick="addToCart(\''+p.id+'\', state.detailQty); flashToast(\'Ditambahkan ke keranjang.\');">Tambah ke Keranjang</button>'
-  +       '<button class="btn btn-gold" '+(p.stock<=0?'disabled':'')+' onclick="addToCart(\''+p.id+'\', state.detailQty); goBuyerView(\'keranjang\');">Beli Sekarang</button>'
+  +     sizePickerHTML(p, sz, true)
+  +     '<div style="font-size:13px;color:var(--ink-soft);margin-bottom:8px;">'
+  +       (sz ? 'Stok ukuran <b>'+sz+'</b>: '+availStk+' pasang' : 'Total stok: <b>'+availStk+'</b> pasang')
+  +     '</div>'
+  +     (!sz ? '<div style="font-size:13px;color:var(--lacquer);font-weight:600;margin-bottom:14px;">⚠ Pilih ukuran terlebih dahulu.</div>' : '')
+  +     '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:8px;">'
+  +       '<div class="qty-stepper"><button onclick="changeDetailQty(-1)" '+(canAdd?'':'disabled')+'>−</button><span>'+state.detailQty+'</span><button onclick="changeDetailQty(1)" '+(canAdd?'':'disabled')+'>+</button></div>'
+  +       '<button class="btn btn-primary" '+(canAdd?'':'disabled')+' onclick="addToCartSized(\''+p.id+'\', state.detailSize, state.detailQty); flashToast(\'Ukuran '+( sz||'?')+' ditambahkan ke keranjang.\');">Tambah ke Keranjang</button>'
+  +       '<button class="btn btn-gold" '+(canAdd?'':'disabled')+' onclick="addToCartSized(\''+p.id+'\', state.detailSize, state.detailQty); goBuyerView(\'keranjang\');">Beli Sekarang</button>'
   +     '</div>'
   +   '</div>'
   + '</div>'
@@ -727,16 +788,24 @@ function renderDetailProduk(){
 }
 function changeDetailQty(d){
   var p = findProduct(state.selectedProductId);
-  state.detailQty = Math.max(1, Math.min(p.stock||1, state.detailQty+d));
+  var maxStk = state.detailSize ? stockForSize(p, state.detailSize) : totalStock(p);
+  state.detailQty = Math.max(1, Math.min(maxStk||1, state.detailQty+d));
   render();
 }
 function addToCart(productId, qty){
+  /* legacy — route to sized with null */
+  addToCartSized(productId, null, qty);
+}
+function addToCartSized(productId, size, qty){
   var cart = getCart();
   var p = findProduct(productId);
-  var existing = cart.find(function(c){return c.productId===productId;});
+  var key = productId + (size ? ':'+size : '');
+  var existing = cart.find(function(c){return c.key===key;});
+  var maxStk = size ? stockForSize(p, size) : totalStock(p);
   var newQty = (existing?existing.qty:0) + qty;
-  if(newQty > p.stock) newQty = p.stock;
-  if(existing) existing.qty = newQty; else cart.push({productId:productId, qty:newQty});
+  if(newQty > maxStk) newQty = maxStk;
+  if(existing){ existing.qty = newQty; }
+  else { cart.push({key:key, productId:productId, size:size, qty:newQty}); }
 }
 
 /* ---------- Keranjang ---------- */
@@ -753,12 +822,15 @@ function renderKeranjang(){
     var thumbInner = p.image
       ? '<img src="'+p.image+'" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" alt="">'
       : kelomSVG(p.accent,46,30);
+    var sizeTag = c.size ? '<span class="size-badge" style="margin-left:0;">UK '+c.size+'</span>' : '';
+    var ck = "'" + c.key + "'";
     return '<div class="cart-row">'
       + '<div class="cart-thumb">'+thumbInner+'</div>'
-      + '<div style="flex:1;min-width:140px;"><div style="font-weight:600;color:var(--wood-dark);">'+escapeHTML(p.name)+'</div><div style="font-size:13px;color:var(--ink-soft);">'+formatRupiah(p.price)+'</div></div>'
-      + '<div class="qty-stepper"><button onclick="cartChangeQty(\''+p.id+'\',-1)">−</button><span>'+c.qty+'</span><button onclick="cartChangeQty(\''+p.id+'\',1)">+</button></div>'
+      + '<div style="flex:1;min-width:140px;"><div style="font-weight:600;color:var(--wood-dark);">'+escapeHTML(p.name)+'</div>'
+      +   '<div style="font-size:13px;color:var(--ink-soft);margin-top:3px;">'+formatRupiah(p.price)+' '+sizeTag+'</div></div>'
+      + '<div class="qty-stepper"><button onclick="cartChangeQty('+ck+',-1)">−</button><span>'+c.qty+'</span><button onclick="cartChangeQty('+ck+',1)">+</button></div>'
       + '<div style="width:110px;text-align:right;font-weight:700;color:var(--wood-dark);">'+formatRupiah(lineTotal)+'</div>'
-      + '<button class="btn btn-ghost btn-sm" onclick="cartRemove(\''+p.id+'\')">Hapus</button>'
+      + '<button class="btn btn-ghost btn-sm" onclick="cartRemove('+ck+')">Hapus</button>'
     + '</div>';
   }).join('');
   return ''
@@ -774,15 +846,18 @@ function renderKeranjang(){
   +   '</div>'
   + '</div>';
 }
-function cartChangeQty(productId, d){
-  var cart = getCart(); var p = findProduct(productId);
-  var item = cart.find(function(c){return c.productId===productId;});
-  item.qty = Math.max(1, Math.min(p.stock, item.qty+d));
+function cartChangeQty(key, d){
+  var cart = getCart();
+  var item = cart.find(function(c){return c.key===key;});
+  if(!item) return;
+  var p = findProduct(item.productId);
+  var maxStk = item.size ? stockForSize(p, item.size) : totalStock(p);
+  item.qty = Math.max(1, Math.min(maxStk, item.qty+d));
   render();
 }
-function cartRemove(productId){
+function cartRemove(key){
   var u = state.currentUser.username;
-  state.carts[u] = getCart().filter(function(c){return c.productId!==productId;});
+  state.carts[u] = getCart().filter(function(c){return c.key!==key;});
   render();
 }
 function startCheckout(){
@@ -865,7 +940,8 @@ function renderCheckoutStepConfirm(){
   var cart = getCart(); var subtotal=0;
   var rows = cart.map(function(c){
     var p = findProduct(c.productId); var lt=p.price*c.qty; subtotal+=lt;
-    return '<div class="summary-line"><span>'+escapeHTML(p.name)+' × '+c.qty+'</span><span>'+formatRupiah(lt)+'</span></div>';
+    var szTag = c.size ? ' <span class="size-badge">UK '+c.size+'</span>' : '';
+    return '<div class="summary-line"><span>'+escapeHTML(p.name)+' × '+c.qty+szTag+'</span><span>'+formatRupiah(lt)+'</span></div>';
   }).join('');
   var a = state.checkout.address;
   return ''
@@ -886,7 +962,7 @@ function renderCheckoutStepConfirm(){
 function placeOrder(){
   var cart = getCart(); if(cart.length===0) return;
   var subtotal=0;
-  var items = cart.map(function(c){ var p=findProduct(c.productId); subtotal+=p.price*c.qty; return {productId:c.productId, qty:c.qty, price:p.price}; });
+  var items = cart.map(function(c){ var p=findProduct(c.productId); subtotal+=p.price*c.qty; return {productId:c.productId, size:c.size||null, qty:c.qty, price:p.price}; });
   var order = {
     id: genId('ORD-'), buyerUsername: state.currentUser.username, items: items,
     shippingFee: SHIPPING_FEE, total: subtotal+SHIPPING_FEE,
@@ -914,7 +990,7 @@ function renderPesananSaya(){
 }
 function orderCardHTML(o){
   var expanded = state.expandedOrderId===o.id;
-  var itemsTxt = o.items.map(function(it){ var p=findProduct(it.productId); return (p?p.name:'Produk') +' × '+it.qty; }).join(', ');
+  var itemsTxt = o.items.map(function(it){ var p=findProduct(it.productId); return (p?p.name:'Produk')+' × '+it.qty+(it.size?' (UK '+it.size+')':''); }).join(', ');
   var canPay = o.status==='Menunggu Pembayaran';
   var canCancel = o.status==='Menunggu Pembayaran';
   var canReceive = o.status==='Dikirim';
@@ -944,7 +1020,7 @@ function orderExpandHTML(o){
     var on = o.status!=='Dibatalkan' && i<=curIdx;
     return '<div class="tl-node '+(on?'on':'')+'">'+(i>0?'<div class="tl-line '+(on?'on':'')+'"></div>':'')+'<div class="tl-dot"></div><div class="tl-label">'+s+'</div></div>';
   }).join('');
-  var itemsRows = o.items.map(function(it){ var p=findProduct(it.productId); return '<div class="summary-line"><span>'+escapeHTML(p?p.name:'Produk')+' × '+it.qty+'</span><span>'+formatRupiah(it.price*it.qty)+'</span></div>'; }).join('');
+  var itemsRows = o.items.map(function(it){ var p=findProduct(it.productId); var szT=it.size?' <span class="size-badge">UK '+it.size+'</span>':''; return '<div class="summary-line"><span>'+escapeHTML(p?p.name:'Produk')+' × '+it.qty+szT+'</span><span>'+formatRupiah(it.price*it.qty)+'</span></div>'; }).join('');
   return ''
   + '<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px;">'
   +   (o.status!=='Dibatalkan' ? '<div class="timeline">'+tl+'</div>' : '<div class="form-error">Pesanan ini dibatalkan.</div>')
@@ -1075,15 +1151,16 @@ function renderOwnerProduk(){
     var tImg = p.image
       ? '<img src="'+p.image+'" style="width:50px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;" alt="">'
       : '<div style="flex-shrink:0;">'+kelomSVG(p.accent,50,32)+'</div>';
+    var sizeInfo = p.sizes ? SIZES.filter(function(sz){return p.sizes[sz]>0;}).map(function(sz){return sz;}).join(', ') : '-';
     return '<tr><td><div style="display:flex;align-items:center;gap:12px;">'+tImg+'<div><b>'+escapeHTML(p.name)+'</b><br><span style="font-size:12px;color:var(--ink-soft);">'+p.category+'</span></div></div></td>'
     + '<td>'+formatRupiah(p.price)+'</td>'
-    + '<td>'+p.stock+'</td>'
+    + '<td><div style="font-weight:700;">'+p.stock+'</div><div style="font-size:11px;color:var(--ink-soft);">'+sizeInfo+'</div></td>'
     + '<td>'+(stat.count>0?stat.avg.toFixed(1)+' ★ ('+stat.count+')':'—')+'</td>'
     + '<td><div style="display:flex;gap:6px;"><button class="btn btn-outline btn-sm" onclick="openProductModal(\''+p.id+'\')">Edit</button><button class="btn btn-danger btn-sm" onclick="deleteProduct(\''+p.id+'\')">Hapus</button></div></td></tr>';
   }).join('');
   return ''
   + '<div class="page-title"><h1>Daftar Produk</h1><button class="btn btn-primary" onclick="openProductModal(null)">+ Tambah Produk</button></div>'
-  + '<div class="table-wrap"><table><thead><tr><th>Produk</th><th>Harga</th><th>Stok</th><th>Rating</th><th>Aksi</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+  + '<div class="table-wrap"><table><thead><tr><th>Produk</th><th>Harga</th><th>Stok & Ukuran</th><th>Rating</th><th>Aksi</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
 function openProductModal(id){
   var p = id ? findProduct(id) : null;
@@ -1129,17 +1206,19 @@ function saveProduct(){
   var id = state.modal.data.id;
   var name = document.getElementById('pf-name').value.trim();
   var price = parseInt(document.getElementById('pf-price').value,10);
-  var stock = parseInt(document.getElementById('pf-stock').value,10);
+  // stock dihitung dari jumlah semua ukuran di bawah
   var category = document.getElementById('pf-category').value.trim();
   var desc = document.getElementById('pf-desc').value.trim();
   var accent = state.modal.data.accent;
   var image = state.modal.data.image || null;
-  if(!name||!price||isNaN(price)||isNaN(stock)||!category){ flashToast('Lengkapi semua data produk dengan benar.'); return; }
+  var sizes = {}; var stock = 0;
+  SIZES.forEach(function(sz){ var v=parseInt(document.getElementById('pf-sz-'+sz).value,10)||0; sizes[sz]=v; stock+=v; });
+  if(!name||!price||isNaN(price)||!category){ flashToast('Lengkapi semua data produk dengan benar.'); return; }
   if(id){
     var p = findProduct(id);
-    p.name=name; p.price=price; p.stock=stock; p.category=category; p.desc=desc; p.accent=accent; p.image=image;
+    p.name=name; p.price=price; p.stock=stock; p.sizes=sizes; p.category=category; p.desc=desc; p.accent=accent; p.image=image;
   } else {
-    state.products.unshift({id:genId('p'), name:name, price:price, stock:stock, category:category, desc:desc, accent:accent, image:image});
+    state.products.unshift({id:genId('p'), name:name, price:price, stock:stock, sizes:sizes, category:category, desc:desc, accent:accent, image:image});
   }
   state.modal=null; render();
   flashToast(id?'Produk berhasil diperbarui.':'Produk baru berhasil ditambahkan.');
@@ -1443,10 +1522,17 @@ function productModalHTML(d){
   +   '<div class="photo-hint">Foto nyata produk akan tampil di katalog dan detail produk.</div>'
   + '</div>'
   + '<div class="field"><label>Nama Produk</label><input id="pf-name" value="'+escapeHTML(p?p.name:'')+'"></div>'
-  + '<div class="form-grid-2">'
-  +   '<div class="field"><label>Harga (Rp)</label><input id="pf-price" type="number" value="'+(p?p.price:'')+'"></div>'
-  +   '<div class="field"><label>Stok</label><input id="pf-stock" type="number" value="'+(p?p.stock:'')+'"></div>'
-  + '</div>'
+  + '<div class="field"><label>Harga (Rp)</label><input id="pf-price" type="number" value="'+(p?p.price:'')+'"></div>'
+  + '<div class="field"><label>Stok per Ukuran <span style="font-size:11px;font-weight:400;color:var(--ink-soft);">(isi 0 jika ukuran tidak tersedia)</span></label>'
+  + '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:8px;">'
+  + SIZES.map(function(sz){
+      var sv = p&&p.sizes&&p.sizes[sz]!=null ? p.sizes[sz] : 0;
+      return '<div style="text-align:center;">'
+        +'<div style="font-size:11.5px;font-weight:700;color:var(--wood-mid);margin-bottom:5px;">'+sz+'</div>'
+        +'<input id="pf-sz-'+sz+'" type="number" min="0" value="'+sv+'" style="width:100%;padding:7px 4px;border-radius:8px;border:1.5px solid var(--line);text-align:center;font-size:13px;font-weight:700;background:var(--white);outline:none;">'
+        +'</div>';
+    }).join('')
+  + '</div></div>'
   + '<div class="field"><label>Kategori</label><input id="pf-category" value="'+escapeHTML(p?p.category:'')+'" placeholder="Ukir / Lukis / Klasik / Edisi Spesial"></div>'
   + '<div class="field"><label>Deskripsi</label><textarea id="pf-desc" rows="3">'+escapeHTML(p?p.desc:'')+'</textarea></div>'
   + '<div class="field"><label>Warna Ilustrasi <span style="font-size:11px;font-weight:400;color:var(--ink-soft);">(dipakai jika belum ada foto)</span></label>'+swatches+'</div>'
